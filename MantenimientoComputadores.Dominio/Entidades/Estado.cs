@@ -4,10 +4,9 @@ using System.Text;
 
 namespace MantenimientoComputadores.Dominio.Entidades
 {
-    public class Prueba
+    public class Estado
     {
-        public int PruebaId { get; set; }
+        public int EstadoId { get; set; }
         public string Nombre { get; set; }
-        public int Edad  { get; set; }
     }
 }
