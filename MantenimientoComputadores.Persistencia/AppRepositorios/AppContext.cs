@@ -22,7 +22,7 @@ namespace MantenimientoComputadores.Persistencia.AppRepositorios
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder
-                .UseSqlServer("Data Source=.;Initial Catalog=MantenimientoComputadores2; Integrated Security=True");
+                .UseSqlServer("Data Source=.;Initial Catalog=MantenimientoComputadores; Integrated Security=True");
             }
         }
         

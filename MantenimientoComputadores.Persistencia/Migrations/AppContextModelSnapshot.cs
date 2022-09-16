@@ -53,10 +53,10 @@ namespace MantenimientoComputadores.Persistencia.Migrations
                     b.Property<int>("EstadoId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("FechaFinal")
+                    b.Property<DateTime?>("FechaFinal")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaInicio")
+                    b.Property<DateTime?>("FechaInicio")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("TipoServicioId")

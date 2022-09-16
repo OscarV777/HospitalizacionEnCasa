@@ -140,8 +140,8 @@ namespace MantenimientoComputadores.Persistencia.Migrations
                     ClienteId = table.Column<int>(type: "int", nullable: false),
                     AgendaId = table.Column<int>(type: "int", nullable: false),
                     TipoServicioId = table.Column<int>(type: "int", nullable: false),
-                    FechaInicio = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FechaFinal = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FechaInicio = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    FechaFinal = table.Column<DateTime>(type: "datetime2", nullable: true),
                     EstadoId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>

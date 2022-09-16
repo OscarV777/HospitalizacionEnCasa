@@ -11,7 +11,7 @@ using AppContext = MantenimientoComputadores.Persistencia.AppRepositorios.AppCon
 namespace MantenimientoComputadores.Persistencia.Migrations
 {
     [DbContext(typeof(AppContext))]
-    [Migration("20220910043426_inicial")]
+    [Migration("20220916203356_inicial")]
     partial class inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,10 +55,10 @@ namespace MantenimientoComputadores.Persistencia.Migrations
                     b.Property<int>("EstadoId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("FechaFinal")
+                    b.Property<DateTime?>("FechaFinal")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaInicio")
+                    b.Property<DateTime?>("FechaInicio")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("TipoServicioId")
