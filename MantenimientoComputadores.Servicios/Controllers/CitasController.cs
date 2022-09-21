@@ -14,11 +14,11 @@ namespace MantenimientoComputadores.Servicios.Controllers
     [ApiController]
     public class CitasController : ControllerBase
     {
-        AppContext appContext;
+        MantenimientoContext appContext;
         // GET: api/<CitasController>
         public CitasController()
         {
-            appContext = new AppContext(); 
+            appContext = new MantenimientoContext(); 
         }
         [HttpGet("{id}")]
         public async Task <IEnumerable<CitaViewModel>> ObtenerServicioPorTecnico(int id)

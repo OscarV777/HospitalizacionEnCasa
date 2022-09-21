@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using AppContext = MantenimientoComputadores.Persistencia.AppRepositorios.AppContext;
+using MantenimientoContext = MantenimientoComputadores.Persistencia.AppRepositorios.MantenimientoContext;
 
 namespace MantenimientoComputadores.Persistencia.Migrations
 {
-    [DbContext(typeof(AppContext))]
-    [Migration("20220916203356_inicial")]
-    partial class inicial
+    [DbContext(typeof(MantenimientoContext))]
+    [Migration("20220921020946_NumeroDocumento")]
+    partial class NumeroDocumento
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -104,6 +104,9 @@ namespace MantenimientoComputadores.Persistencia.Migrations
                     b.Property<string>("Apellidos")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("Condicion")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Direccion")
                         .HasColumnType("nvarchar(max)");
 
@@ -113,13 +116,24 @@ namespace MantenimientoComputadores.Persistencia.Migrations
                     b.Property<string>("Nombre")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("NumeroDocumento")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RolId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Telefono")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<byte[]>("password_hash")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("password_salt")
+                        .HasColumnType("varbinary(max)");
+
                     b.HasKey("PersonaId");
+
+                    b.HasIndex("RolId");
 
                     b.ToTable("Personas");
                 });
@@ -200,6 +214,27 @@ namespace MantenimientoComputadores.Persistencia.Migrations
                     b.ToTable("Estados");
                 });
 
+            modelBuilder.Entity("MantenimientoComputadores.Dominio.Entidades.Rol", b =>
+                {
+                    b.Property<int>("RolId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<bool>("Condicion")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Descricion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("RolId");
+
+                    b.ToTable("Roles");
+                });
+
             modelBuilder.Entity("MantCompu.App.Dominio.Administrador", b =>
                 {
                     b.HasOne("MantCompu.App.Dominio.Persona", "Persona")
@@ -257,6 +292,17 @@ namespace MantenimientoComputadores.Persistencia.Migrations
                     b.Navigation("Persona");
                 });
 
+            modelBuilder.Entity("MantCompu.App.Dominio.Persona", b =>
+                {
+                    b.HasOne("MantenimientoComputadores.Dominio.Entidades.Rol", "Rol")
+                        .WithMany("personas")
+                        .HasForeignKey("RolId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Rol");
+                });
+
             modelBuilder.Entity("MantCompu.App.Dominio.Tecnico", b =>
                 {
                     b.HasOne("MantCompu.App.Dominio.Persona", "Persona")
@@ -270,9 +316,11 @@ namespace MantenimientoComputadores.Persistencia.Migrations
 
             modelBuilder.Entity("MantenimientoComputadores.Dominio.Entidades.Agenda", b =>
                 {
-                    b.HasOne("MantCompu.App.Dominio.Tecnico", null)
+                    b.HasOne("MantCompu.App.Dominio.Tecnico", "Tecnico")
                         .WithMany("Agendas")
                         .HasForeignKey("TecnicoId");
+
+                    b.Navigation("Tecnico");
                 });
 
             modelBuilder.Entity("MantCompu.App.Dominio.Cliente", b =>
@@ -283,6 +331,11 @@ namespace MantenimientoComputadores.Persistencia.Migrations
             modelBuilder.Entity("MantCompu.App.Dominio.Tecnico", b =>
                 {
                     b.Navigation("Agendas");
+                });
+
+            modelBuilder.Entity("MantenimientoComputadores.Dominio.Entidades.Rol", b =>
+                {
+                    b.Navigation("personas");
                 });
 #pragma warning restore 612, 618
         }

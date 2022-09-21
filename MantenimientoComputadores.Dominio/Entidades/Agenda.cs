@@ -11,6 +11,6 @@ namespace MantenimientoComputadores.Dominio.Entidades
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFinal { get; set; }
         public Tecnico Tecnico { get; set; }
-        public int TecnicoId {get; set; } 
+        public int? TecnicoId {get; set; } 
     }
 }

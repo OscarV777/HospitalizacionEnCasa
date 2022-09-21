@@ -7,7 +7,7 @@ using MantCompu.App.Dominio;
 
 namespace MantenimientoComputadores.Persistencia.AppRepositorios
 {
-    public class AppContext : DbContext
+    public class MantenimientoContext : DbContext
     {
         public DbSet<Persona> Personas { get; set; }
         public DbSet<Administrador> Administradors { get; set; }
@@ -17,6 +17,7 @@ namespace MantenimientoComputadores.Persistencia.AppRepositorios
         public DbSet<TipoServicio> TipoServicios { get; set; }
         public DbSet<Agenda> Agendas { get; set; }
         public DbSet<Cita> Citas { get; set; }
+        public DbSet<Rol> Roles { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)

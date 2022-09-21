@@ -21,21 +21,18 @@ namespace MantenimientoComputadores.Persistencia.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Personas",
+                name: "Roles",
                 columns: table => new
                 {
-                    PersonaId = table.Column<int>(type: "int", nullable: false)
+                    RolId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Apellidos = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Direccion = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Telefono = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Descricion = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Condicion = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Personas", x => x.PersonaId);
+                    table.PrimaryKey("PK_Roles", x => x.RolId);
                 });
 
             migrationBuilder.CreateTable(
@@ -50,6 +47,33 @@ namespace MantenimientoComputadores.Persistencia.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TipoServicios", x => x.TipoServicioId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Personas",
+                columns: table => new
+                {
+                    PersonaId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Apellidos = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Direccion = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Telefono = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RolId = table.Column<int>(type: "int", nullable: false),
+                    password_hash = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    password_salt = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    Condicion = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Personas", x => x.PersonaId);
+                    table.ForeignKey(
+                        name: "FK_Personas_Roles_RolId",
+                        column: x => x.RolId,
+                        principalTable: "Roles",
+                        principalColumn: "RolId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -209,6 +233,11 @@ namespace MantenimientoComputadores.Persistencia.Migrations
                 column: "PersonaId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Personas_RolId",
+                table: "Personas",
+                column: "RolId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Tecnicos_PersonaId",
                 table: "Tecnicos",
                 column: "PersonaId");
@@ -239,6 +268,9 @@ namespace MantenimientoComputadores.Persistencia.Migrations
 
             migrationBuilder.DropTable(
                 name: "Personas");
+
+            migrationBuilder.DropTable(
+                name: "Roles");
         }
     }
 }
