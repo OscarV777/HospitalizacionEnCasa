@@ -3,9 +3,14 @@ using MantenimientoComputadores.Persistencia.AppRepositorios;
 using MantenimientoComputadores.Servicios.Models.Personas.Persona;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -19,9 +24,10 @@ namespace MantenimientoComputadores.Servicios.Controllers
     {
         
         public MantenimientoContext appContext;
-
-        public PersonasController()
+        private readonly IConfiguration _config;
+        public PersonasController(IConfiguration config)
         {
+            _config = config;
             appContext = new MantenimientoContext();
         }
 
@@ -137,6 +143,52 @@ namespace MantenimientoComputadores.Servicios.Controllers
                 return new ReadOnlySpan<byte>(passwordHashAlmacenado).SequenceEqual(new ReadOnlySpan<byte>(passwordHashNuevo));
             }
         }
-        
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Login([FromBody] LoginViewModel model)
+        {
+            var email = model.Email;
+            var usuario = await appContext.Personas.Where(u => u.Condicion == true).Include(u => u.Rol).FirstOrDefaultAsync(u => u.Email == email);
+
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            if (!VerificarPasswordHash(model.Password, usuario.password_hash, usuario.password_salt))
+            {
+                return NotFound();
+            }
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, usuario.PersonaId.ToString()),
+                new Claim(ClaimTypes.Name, email),
+                new Claim(ClaimTypes.Role, usuario.Rol.Nombre),
+                new Claim("idusuario", usuario.PersonaId.ToString()),
+                new Claim("rol", usuario.Rol.Nombre),
+                new Claim("nombre",usuario.Nombre+" "+usuario.Apellidos)
+            };
+
+            return Ok(
+                 new { token = GenerarToken(claims) }
+             );
+
+        }
+
+        private string GenerarToken(List<Claim> claims)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                _config["Jwt:Issuer"],
+                _config["Jwt:Issuer"],
+                expires: DateTime.Now.AddMinutes(30),
+                signingCredentials: creds,
+                claims: claims
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
     }
 }

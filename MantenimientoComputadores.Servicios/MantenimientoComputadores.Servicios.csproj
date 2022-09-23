@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MantenimientoComputadores.Dominio\MantenimientoComputadores.Dominio.csproj" />
     <ProjectReference Include="..\MantenimientoComputadores.Persistencia\MantenimientoComputadores.Persistencia.csproj" />
   </ItemGroup>

@@ -1,5 +1,6 @@
 ﻿using MantenimientoComputadores.Persistencia.AppRepositorios;
 using MantenimientoComputadores.Servicios.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace MantenimientoComputadores.Servicios.Controllers
         {
             appContext = new MantenimientoContext(); 
         }
+        [Authorize(Roles = "Administrador, Tecnico")]
         [HttpGet("{id}")]
         public async Task <IEnumerable<CitaViewModel>> ObtenerServicioPorTecnico(int id)
         {
